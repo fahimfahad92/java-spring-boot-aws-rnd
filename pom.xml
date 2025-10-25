@@ -28,11 +28,18 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <s3.version>2.25.67</s3.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>${s3.version}</version>
         </dependency>
 
         <dependency>
