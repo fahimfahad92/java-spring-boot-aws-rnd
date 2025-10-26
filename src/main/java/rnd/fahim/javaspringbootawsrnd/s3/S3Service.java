@@ -1,10 +1,12 @@
 package rnd.fahim.javaspringbootawsrnd.s3;
 
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.time.Duration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,28 +37,24 @@ public class S3Service {
   }
 
   public String uploadFile(MultipartFile file) {
-    String filename = file.getOriginalFilename();
-
-    if (StringUtils.isEmpty(filename)) {
-      return "No file name";
-    }
-
-    filename = file.getOriginalFilename().substring(0, filename.lastIndexOf("."));
-
     try {
-      log.info("Uploading file to S3: " + filename);
+      File tempFile = File.createTempFile("upload-", file.getOriginalFilename());
+      file.transferTo(tempFile);
+
+      String key = file.getOriginalFilename();
+
       PutObjectRequest putObjectRequest =
           PutObjectRequest.builder()
               .bucket(bucketName)
-              .key(filename)
+              .key(key)
               .contentType(file.getContentType())
               .build();
 
-      s3Client.putObject(
-          putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+      s3Client.putObject(putObjectRequest, tempFile.toPath());
 
-      log.info("File uploaded to S3: " + filename);
-      return filename;
+      Files.deleteIfExists(tempFile.toPath());
+
+      return "File uploaded successfully to S3 with key: " + key;
     } catch (IOException e) {
       log.error(e.getMessage());
       throw new RuntimeException("Failed to upload file to S3", e);
