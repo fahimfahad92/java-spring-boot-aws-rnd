@@ -28,7 +28,8 @@
     </scm>
     <properties>
         <java.version>21</java.version>
-        <s3.version>2.25.67</s3.version>
+        <aws.sdk.version>2.25.67</aws.sdk.version>
+        <jackson-databind.version>2.20.1</jackson-databind.version>
     </properties>
     <dependencies>
         <dependency>
@@ -39,7 +40,20 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>${s3.version}</version>
+            <version>${aws.sdk.version}</version>
+        </dependency>
+
+        <!-- AWS SDK v2 (SQS) -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sqs</artifactId>
+            <version>${aws.sdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-starter-sqs</artifactId>
+            <version>3.1.1</version>
         </dependency>
 
         <dependency>
