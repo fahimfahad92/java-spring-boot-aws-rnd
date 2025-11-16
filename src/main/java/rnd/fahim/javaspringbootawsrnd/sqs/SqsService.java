@@ -1,4 +1,4 @@
-package rnd.fahim.javaspringbootawsrnd.sqs.standard;
+package rnd.fahim.javaspringbootawsrnd.sqs;
 
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import java.util.List;
