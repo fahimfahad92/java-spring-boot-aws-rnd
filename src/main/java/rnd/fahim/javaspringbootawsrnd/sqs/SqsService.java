@@ -3,6 +3,7 @@ package rnd.fahim.javaspringbootawsrnd.sqs;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.*;
@@ -55,7 +56,7 @@ public class SqsService {
    * The method processes each message and automatically deletes it from the queue post-processing.
    * - The number of retrieved messages per poll is limited to 10.
    */
-  //  @Scheduled(fixedDelay = 5000)
+  @Scheduled(fixedDelay = 5000)
   public void pollMessages() {
     ReceiveMessageRequest receiveRequest =
         ReceiveMessageRequest.builder()
