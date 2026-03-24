@@ -36,9 +36,10 @@ public class S3Service {
     this.s3presigner = s3presigner;
   }
 
-  public String uploadFile(MultipartFile file) {
+  public String uploadFile(MultipartFile file) throws IOException {
+    File tempFile = null;
     try {
-      File tempFile = File.createTempFile("upload-", file.getOriginalFilename());
+      tempFile = File.createTempFile("upload-", file.getOriginalFilename());
       file.transferTo(tempFile);
 
       String key = file.getOriginalFilename();
@@ -58,6 +59,10 @@ public class S3Service {
     } catch (IOException e) {
       log.error(e.getMessage());
       throw new RuntimeException("Failed to upload file to S3", e);
+    } finally{
+        if(tempFile != null) {
+          Files.deleteIfExists(tempFile.toPath());
+        }
     }
   }
 
@@ -97,9 +102,12 @@ public class S3Service {
       URL url = s3presigner.presignGetObject(request).url();
 
       return url.toString();
+    } catch (S3Exception e) {
+      log.error("Failed to generate pre-signed URL for: " + fileName, e);
+      throw new RuntimeException("Failed to generate pre-signed URL", e);
     } catch (Exception e) {
-      log.error(e.getMessage());
-      return null;
+      log.error("Unexpected error generating pre-signed URL", e);
+      throw new RuntimeException("Unexpected error", e);
     }
   }
 
